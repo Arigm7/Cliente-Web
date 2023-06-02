@@ -1,12 +1,11 @@
-<template>
-   
+<template> 
   <v-container fluid >                                          
     <!-- PANEL DE BUSQUEDA-->
     <v-row>
         <v-card elevation="24" shaped width="100%" dense class="ml-15 mr-15">
-            <v-card-title>Búsqueda</v-card-title>       <!--Titutlo-->
-            <v-card-text>                                                   <!--Texto-->
-                <v-form ref="formBusqueda" v-model="valid">                <!--Validar el formulario, ref es como el id en html, v-model es para asociar variables-->
+            <v-card-title>Búsqueda</v-card-title>       
+            <v-card-text>                                                  
+                <v-form ref="formBusqueda" v-model="valid">                
                     <v-row>
                         <v-col cols="12" md="4" sm="6">
                             <v-text-field 
@@ -37,16 +36,16 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn rounded color="#1C4C96" dark small @click="onClickBuscar">
-                    <v-icon dark left>mdi-magnify</v-icon>                  <!--SE AGREGO LOS ICON-->
+                    <v-icon dark left>mdi-magnify</v-icon>                  
                     Buscar</v-btn>
                 <v-btn rounded color="#558B2F" dark small @click="onClickLimpiar">
                     <v-icon dark left>mdi-backspace</v-icon>
                     Limpiar</v-btn>
-            </v-card-actions>       <!--Lo del boton-->
+            </v-card-actions>       
         </v-card>
     </v-row>
     <!--SECCION TABLA PRINCIPAL -->
-    <v-row align="start" justify="start">                                   <!--SE AGREGO EL LUGAR-->
+    <v-row align="start" justify="start">                                  
         <v-col cols="2">
             <v-btn rounded color="#1C4C96" dark small @click="onclickNuevoPersonal" class="ml-15 mr-15">
                     <v-icon dark left>mdi-plus</v-icon>                  
@@ -85,19 +84,6 @@
                             <span>Eliminar</span>
                         </v-tooltip>
                     </v-row>
-                <!--<v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(item)"
-                >
-                    mdi-pencil
-                </v-icon>
-                <v-icon
-                    small
-                    @click="deleteItem(item)"
-                >
-                    mdi-delete-outline
-                </v-icon>-->
              </template>
              <template v-slot:item.idPersonal="{item}">
                 <span class="font-weight-bold blue--text">{{ item.idPersonal }} </span>
@@ -113,22 +99,22 @@
         <v-card>
             <v-card-title>Personal</v-card-title>
             <v-card-text>
-                <v-form ref="formPersonal" v-model="valid">
+                <v-form ref="formPersonal" v-model="valid" lazy-validation>
                     <v-row align="center" justify="start">
-                       <v-col cols="12" md="6" sm="4">  <!--PARA HACERLO RESPON-->
-                            <v-text-field v-model="personal.nombre" label="Nombre"></v-text-field>
+                       <v-col cols="12" md="6" sm="4">  
+                            <v-text-field v-model="personal.nombre" label="Nombre" :rules="required"></v-text-field>
                        </v-col>
-                       <v-col cols="12" md="6" sm="4">  <!--PARA HACERLO RESPON-->
-                            <v-text-field v-model="personal.apellidoPaterno" label="Apellido Paterno"></v-text-field>
+                       <v-col cols="12" md="6" sm="4"> 
+                            <v-text-field v-model="personal.apellidoPaterno" label="Apellido Paterno" :rules="required"></v-text-field>
                        </v-col> 
-                       <v-col cols="12" md="6" sm="4">  <!--PARA HACERLO RESPON-->
-                            <v-text-field v-model="personal.apellidoMaterno" label="Apellido Materno"></v-text-field>
+                       <v-col cols="12" md="6" sm="4">  
+                            <v-text-field v-model="personal.apellidoMaterno" label="Apellido Materno" :rules="required"></v-text-field>
                        </v-col> 
-                       <v-col cols="12" md="6" sm="4">  <!--PARA HACERLO RESPON-->
-                            <v-text-field v-model="personal.curp" label="CURP"></v-text-field>
+                       <v-col cols="12" md="6" sm="4">  
+                            <v-text-field v-model="personal.curp" label="CURP" :rules="required"></v-text-field>
                        </v-col> 
-                       <v-col cols="12" md="6" sm="4">  <!--PARA HACERLO RESPON-->
-                            <v-text-field v-model="personal.rfc" label="RFC"></v-text-field>
+                       <v-col cols="12" md="6" sm="4">  
+                            <v-text-field v-model="personal.rfc" label="RFC" :rules="required"></v-text-field>
                        </v-col> 
                        <v-col cols="12" md="6" sm="4">
                             <v-select :items="catPaises" label="Pais" item-value="id" item-text="nombre" @change="changePais"></v-select>
@@ -156,12 +142,15 @@
 
 <script>
 import {get, post} from '../api/Requests.js'
+
 export default {
     name: "Página2",
     props:{},
     data(){
         return{
+            required:[(v) => !!v || "Este campo es requerido"],
            valid:false,
+           dialogo:false,
            dialogoPersonal:false,
            idPersonalSelect:null,
            filtro:{
@@ -219,31 +208,35 @@ export default {
                 sortable: false,
                 windth:255,
                 },
-                {
-                text: 'Fecha de Nacimiento',
-                value: 'fechaNacimiento',
-                align: 'start',
-                sortable: false,
-                windth:255,
-                },
-                {
-                text: 'Sexo',
-                value: 'sexo',
-                align: 'start',
-                sortable: false,
-                windth:255,
-                },
+
+                
             ],
             datos:[
                 {
-                    idPersonal: 'aaa',
-                    nombre:'aa',
-                    apellidoPaterno:'aaa',
-                    apellidoMaterno:'aaa',
-                    curp:'aaa',
-                    rfc:'aaa',
-                    fechaNacimiento:'aaaa',
-                    sexo:'aaaa',
+                idPersonal:null,
+                nombre:null,
+                apellidoPaterno:null,
+                apellidoMaterno:null,
+                curp:null,
+                rfc:null,
+                fechaNacimiento:null,
+                sexo:null,
+                calle:null,
+                colonia:null,
+                numExt:null,
+                numInt:null,
+                cp:null,
+                idPais:null,
+                idEntidadFederativa:null,
+                idMunicipio:null,
+                email:null,
+                celular:null,
+                idEstadoCivil:null,
+                ultimoGradoEstudio:null,
+                profecion:null,
+                idEstatus:null,
+                tiempoCreacion:null,
+                tiempoActualizacion:null
                 }
             ],  
             personal:{
@@ -270,7 +263,7 @@ export default {
                 profecion:null,
                 idEstatus:null,
                 tiempoCreacion:null,
-                tiempoActualizacion:null,
+                tiempoActualizacion:null
             },  
             catPaises:[
                 {id:1,nombre:'Mexico'},
@@ -286,6 +279,9 @@ export default {
         if(!this.$session.id() && !this.$session.has("user")){
             this.$router.push({name:"login"})
         }
+         this.getPersonal();
+         
+                
     },
     mounted(){
         
@@ -295,11 +291,13 @@ export default {
     methods:{
         onclickNuevoPersonal(){
             this.dialogoPersonal=true
+            this.dialogo=false
         },
         onclickEditarPersonal(item){
             console.log(item),
             this.personal={...item},
             this.dialogoPersonal=true
+            this.dialogo=true
         },
         onclickEliminarPersonal(item){
             console.log(item)
@@ -311,8 +309,31 @@ export default {
         onClickLimpiar(){
             this.$refs.formBusqueda.reset()
         },
-        onClickGuardarPersonal(){
-
+        async onClickGuardarPersonal(){
+            if(this.$refs.formPersonal.validate()){
+                const postData = new URLSearchParams();
+                postData.append('nombre', this.personal.nombre);
+                postData.append('apellidoPaterno', this.personal.apellidoPaterno);
+                postData.append('apellidoMaterno', this.personal.apellidoMaterno);
+                postData.append('curp', this.personal.curp);
+                postData.append('rfc', this.personal.rfc);
+                const response = await post('/personal/registrarPersonalPrueba/',postData,);
+                if(response.error===true){
+                    console.log(response.mensaje)
+                    return;
+                }else{
+                    console.log(response.mensaje)
+                    
+                
+                    this.getPersonal();
+                }
+                console.log(this.personal.nombre)
+                console.log(this.personal.apellidoPaterno)
+                console.log(this.personal.apellidoMaterno)
+                console.log(this.personal.curp)
+                console.log(this.personal.nombre)
+                console.log(this.personal.rfc)
+            }
         },
         onClickCerrarPersonal(){
             this.$refs.formPersonal.reset(),
@@ -326,7 +347,7 @@ export default {
                     {id:1,nombre:'M1'},
                     {id:2,nombre:'M2'},
                     {id:3,nombre:'M4'},
-                ),
+                )
             }
             if (value===2){
                 this.catEstados(
@@ -334,16 +355,31 @@ export default {
                     {id:1,nombre:'B1'},
                     {id:2,nombre:'B2'},
                     {id:3,nombre:'B3'},
-                ),
+                )
             }*/
         },
         changeEstado(){
+        if (value===1){
+                this.catEstados(
 
+                    {id:1,nombre:'M1'},
+                    {id:2,nombre:'M2'},
+                    {id:3,nombre:'M4'},
+                )
+            }
+            if (value===2){
+                this.catEstados(
+
+                    {id:1,nombre:'B1'},
+                    {id:2,nombre:'B2'},
+                    {id:3,nombre:'B3'},
+                )
+            }
         },
         async getPersonal(){
-            const response = await get('/usuario/getAllUsers/'+this.filtro.numPersonal);
+            const response = await get('/personal/getAllPersonal/');
             if(response.error===true){
-
+                console.log(response.mensaje)
                 return;
             }else{
                 this.datos=response;
