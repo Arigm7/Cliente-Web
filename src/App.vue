@@ -1,10 +1,12 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Principal</router-link> |
+      <router-link to="/pagina2">Pagina2</router-link>
     </nav>
-    <router-view/>
+    <v-app>               <!--SE AGREGO PARA LOS COLORES -->
+      <router-view/>
+    </v-app>
   </div>
 </template>
 
